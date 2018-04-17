@@ -1,94 +1,78 @@
 #!/usr/bin/env python3
-
-import pymysql
-import string
-import csv
-import datetime
+import getpass
 import os
-from pymysql import OperationalError
-from pymysql import InternalError
+from cipher import Cipher
+from file_manager import File_manager
 
-#Class Connection
-class Connection:
-    #Class variables
-    host = ""
-    user = ""
-    password = ""
-    database = ""
-    tables= ""
-    connec = ""
-    cursor = ""
-
-    #Connect to the database on Initialization after assiging the class variables
-    def __init__(self, host, user, password, database):
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
-        self.connec = pymysql.connect(self.host,self.user,self.password,self.database)
-        self.cursor = self.connec.cursor()
-
-    #Return all the available tables in the db
-    def getTables(self):
-        print('Retrieving tables')
-        sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA=\'" + self.database + "\';"
-        # Execute the SQL command
-        self.cursor.execute(sql)
-        # Fetch all the rows
-        self.tables =self.cursor.fetchall()
-
-    def getData(self, table):
-        print('Retrieving data from table ' + table)
-        sql = 'select * from ' + table + ';'
-        self.cursor.execute(sql)
-
-    def cleanTable(self, table):
-        table = str(table)
-        table = table[2:]
-        table = table[:-3]
-        return table
-
-    def createFolder(self):
-        print('Creating folder')
-        now = datetime.datetime.now()
-        directory = self.database + '-' + now.strftime("%Y-%m-%d")
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        return directory
-
-    def exportData(self):
-        for table in self.tables:
-            directory = db.createFolder()
-            table = db.cleanTable(table)
-            now = datetime.datetime.now()
-            filename = directory + '/' + table + '-' + now.strftime("%Y-%m-%d") + '.csv'
-            with open(filename, "w", encoding="utf-8" ,newline='') as csv_file:  # Python 3 version
-                self.getData(table)
-                print('Writing data from table ' + table)
-                csv_writer = csv.writer(csv_file)
-                csv_writer.writerow([i[0] for i in self.cursor.description]) # write headers
-                csv_writer.writerows(self.cursor)
+#Check which os is used and clear the terminal
+def clearing():
+    from sys import platform as _platform
+    if _platform == "linux" or _platform == "linux2" or _platform == "darwin":
+        clear = lambda: os.system('clear')
+    elif _platform == "win64" or _platform == "win32":
+        clear = lambda: os.system('cls')
+    clear()
 
 
-with open('databases.txt') as f:
-    for line in f:
-        if 'str' in line:
-            break
-        else:
-            try:
-                connectionInfo = line.split(',')
-                print('Trying to connecto to database ' + connectionInfo[3][:-1])
-                db = Connection(connectionInfo[0],connectionInfo[1],connectionInfo[2],connectionInfo[3][:-1])
-            except OperationalError as error:
-                code, message = error.args
-                print('OperationalError', code, ':', message)
-            except InternalError as error:
-                code, message = error.args
-                print('InternalError', code, ':', message)
-            except:
-                print('Unexpected error:'. sys.exc_info()[0])
-                raise
-            else:
-                db.getTables()
-                db.exportData()
-                print('Database backup successfull')
+exit = False
+
+#Enter ther file's password
+password = getpass.getpass("Please enter your password: ")
+
+#Init the file we are using
+file = File_manager('databases.txt', password)
+
+#While we don't choose the action 99
+while not exit:
+    #Display all available actions
+    print("Actions:")
+    print("0 - ADD DATABASE")
+    print("1 - DELETE DATABASE")
+    print("2 - CLEAR DATABASES")
+    print("3 - SHOW DATABASES")
+    print("4 - START BACKUP")
+    print("98 - CLEAR")
+    print("99 - EXIT")
+
+    #Ask for the action we want to do
+    action = input("Enter the action's number you want to use: ")
+
+    #If we want to add a new db
+    if action == "0":
+        host = input("Enter the host: ")
+        user = input("Enter the username: ")
+        #Hidde the password
+        dbPassword = getpass.getpass("Please enter your password:")
+        database = input("Enter the database: ")
+        #Add the new database to the file
+        file.addDatabase(host,user,dbPassword,database)
+
+    #If we want to delete a db
+    elif action == "1":
+        print('To be implemented')
+
+    #if we want to clear the file
+    elif action == "2":
+        print('To be implemented')
+
+    #If we want to see the databases
+    elif action == "3":
+        #Show the databases
+        file.showDatabases()
+
+    #If we want to start the back up
+    elif action == "4":
+        #Start the backup
+        file.backupDatabases()
+
+    #If we want to clear
+    elif action == "98":
+        #Clear
+        clearing()
+
+    #If we want to exit
+    elif action == "99":
+        #Exit the program
+        exit = True
+    else:
+        print("Please enter a valid number")
