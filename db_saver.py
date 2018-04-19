@@ -53,7 +53,7 @@ while not exit:
 
     #if we want to clear the file
     elif action == "2":
-        print('To be implemented')
+        file.clearBackup()
 
     #If we want to see the databases
     elif action == "3":
