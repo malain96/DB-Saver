@@ -49,11 +49,13 @@ while not exit:
 
     #If we want to delete a db
     elif action == "1":
-        print('To be implemented')
+        file.showDatabases()
+        dbId = input("Enter the number of the database you want to delete: ")
+        file.deleteDatabase(dbId)
 
     #if we want to clear the file
     elif action == "2":
-        file.clearBackup()
+        file.clearDatabases()
 
     #If we want to see the databases
     elif action == "3":

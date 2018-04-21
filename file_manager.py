@@ -64,7 +64,19 @@ class File_manager:
                         db.getTables()
                         db.exportData()
                         print('Database backup successfull')
+
     #Clear databases file
-    def clearBackup(self):
+    def clearDatabases(self):
         f = open(self.file, 'r+')
         f.truncate()
+
+
+    def deleteDatabase(self, id):
+        with open(self.file, 'r') as f:
+            lines = f.readlines()
+            lines.pop(1)
+            f.close()
+
+        with open(self.file, 'w') as f:
+            f.writelines(lines)
+            f.close()
