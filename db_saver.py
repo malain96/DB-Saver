@@ -22,10 +22,12 @@ password = getpass.getpass("Please enter your password: ")
 #Init the file we are using
 file = File_manager('databases.txt', password)
 
+clearing()
+
 #While we don't choose the action 99
 while not exit:
     #Display all available actions
-    print("Actions:")
+    print("\nActions:")
     print("0 - ADD DATABASE")
     print("1 - DELETE DATABASE")
     print("2 - CLEAR DATABASES")
@@ -36,6 +38,8 @@ while not exit:
 
     #Ask for the action we want to do
     action = input("Enter the action's number you want to use: ")
+
+    clearing()
 
     #If we want to add a new db
     if action == "0":
@@ -49,9 +53,12 @@ while not exit:
 
     #If we want to delete a db
     elif action == "1":
-        file.showDatabases()
-        dbId = input("Enter the number of the database you want to delete: ")
-        file.deleteDatabase(dbId)
+        if file.isEmpty():
+            print("You can't delete a database, your file is empty!")
+        else:
+            file.showDatabases()
+            dbId = input("Enter the number of the database you want to delete: ")
+            file.deleteDatabase(dbId)
 
     #if we want to clear the file
     elif action == "2":
@@ -60,12 +67,18 @@ while not exit:
     #If we want to see the databases
     elif action == "3":
         #Show the databases
-        file.showDatabases()
+        if file.isEmpty():
+            print("You can't display databases, your file is empty!")
+        else:
+            file.showDatabases()
 
     #If we want to start the back up
     elif action == "4":
         #Start the backup
-        file.backupDatabases()
+        if file.isEmpty():
+            print("You can't start the backup , your file is empty!")
+        else:
+            file.backupDatabases()
 
     #If we want to clear
     elif action == "98":
