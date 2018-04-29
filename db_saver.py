@@ -15,11 +15,18 @@ def clearing():
 
 exit = False
 
-#Enter ther file's password
-password = getpass.getpass("Please enter your password: ")
+#Enter the database's file - If the file doesn't exist, it will be created
+fileToOpen = input("Please enter the file containing the databases [leave empty to use the default 'databases.txt']:")
+
+#Check if we should use the default file
+if len(fileToOpen.strip()) == 0:
+    fileToOpen = 'databases.txt'
+
+#Enter the file's password
+password = getpass.getpass("Please enter the password to read this file: ")
 
 #Init the file we are using
-file = File_manager('databases.txt', password)
+file = File_manager(fileToOpen, password)
 
 clearing()
 
