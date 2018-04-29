@@ -4,7 +4,7 @@ import sys
 from cipher import Cipher
 from pymysql import OperationalError
 from pymysql import InternalError
-from connection import Connection
+from database import Database
 
 
 class File_manager:
@@ -65,9 +65,9 @@ class File_manager:
                         break
                     else:
                         connectionInfo = line.split(',')
-                        print("Trying to connecto to database", connectionInfo[3])
-                        db = Connection(cipher.decode(connectionInfo[0]), cipher.decode(connectionInfo[1]),
-                                        cipher.decode(connectionInfo[2]), cipher.decode(connectionInfo[3]))
+                        print("Trying to connecto to database", cipher.decode(connectionInfo[3]))
+                        db = Database(cipher.decode(connectionInfo[0]), cipher.decode(connectionInfo[1]),
+                                      cipher.decode(connectionInfo[2]), cipher.decode(connectionInfo[3]))
                         db.getTables()
                         db.exportData()
                         print("Database backup successful")
@@ -100,7 +100,7 @@ class File_manager:
         try:
             with open(self.file, "r") as f:
                 lines = f.readlines()
-                lines.pop(int(id)-1)
+                lines.pop(int(id) - 1)
                 f.close()
             with open(self.file, "w") as f:
                 f.writelines(lines)

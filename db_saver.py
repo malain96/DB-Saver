@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import getpass
 import os
-from cipher import Cipher
 from file_manager import File_manager
 
 #Check which os is used and clear the terminal
