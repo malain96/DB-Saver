@@ -1,13 +1,12 @@
 import os
-import sys
 
-from cipher import Cipher
+from db_saver.cipher import Cipher
 from pymysql import OperationalError
 from pymysql import InternalError
-from database import Database
+from db_saver.database import Database
 
 
-class File_manager:
+class FileManager:
     # Class variables
     file = ""
     key = ""
@@ -18,14 +17,14 @@ class File_manager:
         self.key = key
 
     # Add a database to the file
-    def addDatabase(self, host, user, dbPassword, database):
+    def add_database(self, host, user, db_password, database):
         try:
             cipher = Cipher(self.key)
             text_file = open(self.file, "a")
             if os.path.getsize(self.file) > 0:
                 text_file.write('\n')
             text_file.write(
-                cipher.encode(host) + "," + cipher.encode(user) + "," + cipher.encode(dbPassword) + "," + cipher.encode(
+                cipher.encode(host) + "," + cipher.encode(user) + "," + cipher.encode(db_password) + "," + cipher.encode(
                     database))
             text_file.close()
             print("Database Added!")
@@ -35,7 +34,7 @@ class File_manager:
             raise
 
     # Show databases in the file
-    def showDatabases(self):
+    def show_databases(self):
         print("Databases:")
         try:
             cipher = Cipher(self.key)
@@ -45,10 +44,10 @@ class File_manager:
                     if "str" in line:
                         break
                     else:
-                        connectionInfo = line.split(",")
-                        decodedHost = cipher.decode(connectionInfo[0])
-                        decodeDb = cipher.decode(connectionInfo[3])
-                        print(str(count), "-", decodedHost + "/" + decodeDb)
+                        connection_info = line.split(",")
+                        decoded_host = cipher.decode(connection_info[0])
+                        decode_db = cipher.decode(connection_info[3])
+                        print(str(count), "-", decoded_host + "/" + decode_db)
                         count += 1
         except BaseException as error:
             code, message = error.args
@@ -56,7 +55,7 @@ class File_manager:
             raise
 
     # Backup databases
-    def backupDatabases(self):
+    def backup_databases(self):
         try:
             cipher = Cipher(self.key)
             with open(self.file) as f:
@@ -64,12 +63,12 @@ class File_manager:
                     if "str" in line:
                         break
                     else:
-                        connectionInfo = line.split(',')
-                        print("Trying to connecto to database", cipher.decode(connectionInfo[3]))
-                        db = Database(cipher.decode(connectionInfo[0]), cipher.decode(connectionInfo[1]),
-                                      cipher.decode(connectionInfo[2]), cipher.decode(connectionInfo[3]))
-                        db.getTables()
-                        db.exportData()
+                        connection_info = line.split(',')
+                        print("Trying to connecto to database", cipher.decode(connection_info[3]))
+                        db = Database(cipher.decode(connection_info[0]), cipher.decode(connection_info[1]),
+                                      cipher.decode(connection_info[2]), cipher.decode(connection_info[3]))
+                        db.get_tables()
+                        db.export_data()
                         print("Database backup successful")
         except OperationalError as error:
             code, message = error.args
@@ -85,7 +84,7 @@ class File_manager:
             raise
 
     # Clear databases file
-    def clearDatabases(self):
+    def clear_databases(self):
         try:
             f = open(self.file, "r+")
             f.truncate()
@@ -96,7 +95,7 @@ class File_manager:
             raise
 
     # Delete a databse
-    def deleteDatabase(self, id):
+    def delete_database(self, id):
         try:
             with open(self.file, "r") as f:
                 lines = f.readlines()
@@ -113,7 +112,7 @@ class File_manager:
             print("Unexpected error", code, ":", message)
             raise
 
-    def isEmpty(self):
+    def is_empty(self):
         try:
             if os.path.getsize(self.file) > 0:
                 return False

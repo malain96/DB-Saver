@@ -1,0 +1,1 @@
+To know more about the project or to understand how to run it, refer to the README.md file in the project's root

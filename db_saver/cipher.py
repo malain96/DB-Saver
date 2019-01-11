@@ -1,15 +1,15 @@
 import base64
 
-class Cipher:
 
-    #Class variables
+class Cipher:
+    # Class variables
     key = ""
 
-    #Init
+    # Init
     def __init__(self, key):
         self.key = key
 
-    #Return an encoded clear text
+    # Return an encoded clear text
     def encode(self, clear):
         try:
             enc = []
@@ -23,7 +23,7 @@ class Cipher:
             print("Unexpected error", code, ":", message)
             raise
 
-    #Return a decoded text
+    # Return a decoded text
     def decode(self, enc):
         try:
             dec = []

@@ -25,7 +25,7 @@ class Database:
         self.cursor = self.connec.cursor()
 
     # Return all the available tables in the db
-    def getTables(self):
+    def get_tables(self):
         print("Retrieving tables")
         try:
             sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA=\'" + self.database + "\';"
@@ -39,7 +39,7 @@ class Database:
             raise
 
     # Retrieve the data from a table
-    def getData(self, table):
+    def get_data(self, table):
         print("Retrieving data from table ", table)
         try:
             sql = "select * from " + table + ";"
@@ -50,7 +50,8 @@ class Database:
             raise
 
     # Return a clean table
-    def cleanTable(self, table):
+    @staticmethod
+    def clean_table(table):
         try:
             table = str(table)
             table = table[2:]
@@ -62,11 +63,12 @@ class Database:
             raise
 
     # Return the created directory
-    def createFolder(self):
+    def create_folder(self):
         try:
             print("Creating folder")
             now = datetime.datetime.now()
-            directory = self.database + "-" + now.strftime("%Y-%m-%d")
+            file_dir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.join(file_dir,'../storage/backups/' + self.database + '-' + now.strftime('%Y-%m-%d'))
             if not os.path.exists(directory):
                 os.makedirs(directory)
             return directory
@@ -76,15 +78,15 @@ class Database:
             raise
 
     # Export data to a csv file
-    def exportData(self):
+    def export_data(self):
         try:
             for table in self.tables:
-                directory = self.createFolder()
-                table = self.cleanTable(table)
+                directory = self.create_folder()
+                table = self.clean_table(table)
                 now = datetime.datetime.now()
-                filename = directory + "/" + table + "-" + now.strftime("%Y-%m-%d") + ".csv"
+                filename = directory + '/' + table + '-' + now.strftime('%Y-%m-%d') + '.csv'
                 with open(filename, "w", encoding="utf-8", newline="") as csv_file:  # Python 3 version
-                    self.getData(table)
+                    self.get_data(table)
                     print('Writing data from table ' + table)
                     csv_writer = csv.writer(csv_file)
                     csv_writer.writerow([i[0] for i in self.cursor.description])  # write headers
