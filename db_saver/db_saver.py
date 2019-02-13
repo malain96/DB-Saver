@@ -19,6 +19,7 @@ def clearing():
 
 
 def dialog():
+    logging.info('Entering prompt')
     exit_dialog = False
 
     # Enter the database's file - If the file doesn't exist, it will be created
