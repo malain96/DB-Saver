@@ -40,6 +40,7 @@ You are more than welcome to copy and modify it as you please.
 Notes : 
 * If you are using the default file `database.txt` (stored in `./storage`), clear it before adding a new database.
 * The generated backups are stored in `./storage/backups`.
+* By default, you can find the logs in `./storage/logs.txt`.
 
 
 ## License

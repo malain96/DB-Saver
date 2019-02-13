@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import base64
 
+from db_saver.db_saver_log import DbSaverLog
+
 
 class Cipher:
     # Class variables
@@ -21,7 +23,7 @@ class Cipher:
             return base64.urlsafe_b64encode("".join(enc).encode()).decode()
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise
 
     # Return a decoded text
@@ -36,5 +38,5 @@ class Cipher:
             return "".join(dec)
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise

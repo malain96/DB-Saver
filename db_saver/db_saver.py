@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import getpass
+import logging
 import os
+
+from db_saver.db_saver_log import DbSaverLog
 from db_saver.file_manager import FileManager
 from db_saver.email import Email
 
@@ -54,6 +57,7 @@ def dialog():
 
         # If we want to add a new db
         if action == "0":
+            logging.info('Entering database creation')
             host = input("Enter the host: ")
             user = input("Enter the username: ")
             # Hide the password
@@ -65,58 +69,67 @@ def dialog():
         # If we want to delete a db
         elif action == "1":
             if file.is_empty():
-                print("You can't delete a database, your file is empty!")
+                DbSaverLog.info("You can't delete a database, your file is empty!")
             else:
+                logging.info('Entering database deletion')
                 file.show_databases()
                 db_id = input("Enter the number of the database you want to delete: ")
                 file.delete_database(db_id)
 
         # if we want to clear the file
         elif action == "2":
+            logging.info('Entering database clearing')
             file.clear_databases()
 
         # If we want to see the databases
         elif action == "3":
             # Show the databases
             if file.is_empty():
-                print("You can't display databases, your file is empty!")
+                DbSaverLog.info("You can't display databases, your file is empty!")
             else:
+                logging.info('Entering database display')
                 file.show_databases()
 
         # If we want to start the back up
         elif action == "4":
             # Start the backup
             if file.is_empty():
-                print("You can't start the backup , your file is empty!")
+                DbSaverLog.info("You can't start the backup , your file is empty!")
             else:
+                logging.info('Entering database backup')
                 file.backup_databases()
 
         # If we want to clear
         elif action == "98":
             # Clear
+            logging.info('Entering prompt clearing')
             clearing()
 
         # If we want to exit
         elif action == "99":
+            logging.info('Exiting the prompt')
             # Exit the program
             exit_dialog = True
         else:
-            print("Please enter a valid number")
+            DbSaverLog.info("Please enter a valid number")
 
 
 # Function used to start a backup with a command line
 def auto_backup(file_to_open, password, email):
     try:
+        logging.info('Entering command line backup')
         # Retrieve the database
         file = FileManager(file_to_open, password)
         # Start the backup
         file.backup_databases()
         # If an email is set, send a confirmation email
         if email:
+            logging.info('Entering command line backup email confirmation')
             message = Email.success_message(email)
             Email.send(email, message)
     except Exception as error:
         # If an email is set, send an error email
         if email:
+            logging.info('Entering command line backup error email')
             message = Email.error_message(email, str(error))
             Email.send(email, message)

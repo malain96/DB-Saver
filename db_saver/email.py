@@ -5,6 +5,7 @@ import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from config import Config
+from db_saver.db_saver_log import DbSaverLog
 
 
 class Email:
@@ -12,16 +13,21 @@ class Email:
     # Generate send an email
     @staticmethod
     def send(receiver_email, message):
-        port = Config.PORT  # For SSL
-        smtp_server = Config.SMTP_SERVER
-        sender_email = Config.EMAIL  # Enter your address
-        password = Config.PASSWORD
+        try:
+            port = Config.PORT  # For SSL
+            smtp_server = Config.SMTP_SERVER
+            sender_email = Config.EMAIL  # Enter your address
+            password = Config.PASSWORD
 
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
-            server.quit()
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, message)
+                server.quit()
+        except BaseException as error:
+            code, message = error.args
+            DbSaverLog.typed_error('Unexpected', code, message)
+            raise
 
     # Generate the email error message
     @staticmethod

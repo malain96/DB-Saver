@@ -6,6 +6,9 @@ import os
 
 
 # Class Database
+from db_saver.db_saver_log import DbSaverLog
+
+
 class Database:
     # Class variables
     host = ""
@@ -27,7 +30,7 @@ class Database:
 
     # Return all the available tables in the db
     def get_tables(self):
-        print("Retrieving tables")
+        DbSaverLog.info("Retrieving tables")
         try:
             sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA=\'" + self.database + "\';"
             # Execute the SQL command
@@ -36,18 +39,18 @@ class Database:
             self.tables = self.cursor.fetchall()
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise
 
     # Retrieve the data from a table
     def get_data(self, table):
-        print("Retrieving data from table ", table)
+        DbSaverLog.info("Retrieving data from table " + table)
         try:
             sql = "select * from " + table + ";"
             self.cursor.execute(sql)
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise
 
     # Return a clean table
@@ -60,13 +63,13 @@ class Database:
             return table
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise
 
     # Return the created directory
     def create_folder(self):
         try:
-            print("Creating folder")
+            DbSaverLog.info("Creating folder")
             now = datetime.datetime.now()
             file_dir = os.path.dirname(os.path.abspath(__file__))
             directory = os.path.join(file_dir,'../storage/backups/' + self.database + '-' + now.strftime('%Y-%m-%d-%H%M'))
@@ -75,7 +78,7 @@ class Database:
             return directory
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise
 
     # Export data to a csv file
@@ -88,11 +91,11 @@ class Database:
                 filename = directory + '/' + table + '-' + now.strftime('%Y-%m-%d-%H%M') + '.csv'
                 with open(filename, "w", encoding="utf-8", newline="") as csv_file:  # Python 3 version
                     self.get_data(table)
-                    print('Writing data from table ' + table)
+                    DbSaverLog.info('Writing data from table ' + table)
                     csv_writer = csv.writer(csv_file)
                     csv_writer.writerow([i[0] for i in self.cursor.description])  # write headers
                     csv_writer.writerows(self.cursor)
         except BaseException as error:
             code, message = error.args
-            print("Unexpected error", code, ":", message)
+            DbSaverLog.typed_error('Unexpected', code, message)
             raise
