@@ -32,6 +32,10 @@ def dialog():
 
     # Enter the file's password
     password = getpass.getpass("Please enter the password to read this file: ")
+    # Prevent the user from submitting an empty password
+    while not password:
+        DbSaverLog.info("Please, provide a password!")
+        password = getpass.getpass("Please enter the password to read this file: ")
 
     # Init the file we are using
     file = FileManager(file_to_open, password)
