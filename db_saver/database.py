@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import pymysql
 import datetime
 import csv
@@ -68,7 +69,7 @@ class Database:
             print("Creating folder")
             now = datetime.datetime.now()
             file_dir = os.path.dirname(os.path.abspath(__file__))
-            directory = os.path.join(file_dir,'../storage/backups/' + self.database + '-' + now.strftime('%Y-%m-%d'))
+            directory = os.path.join(file_dir,'../storage/backups/' + self.database + '-' + now.strftime('%Y-%m-%d-%H%M'))
             if not os.path.exists(directory):
                 os.makedirs(directory)
             return directory
@@ -84,7 +85,7 @@ class Database:
                 directory = self.create_folder()
                 table = self.clean_table(table)
                 now = datetime.datetime.now()
-                filename = directory + '/' + table + '-' + now.strftime('%Y-%m-%d') + '.csv'
+                filename = directory + '/' + table + '-' + now.strftime('%Y-%m-%d-%H%M') + '.csv'
                 with open(filename, "w", encoding="utf-8", newline="") as csv_file:  # Python 3 version
                     self.get_data(table)
                     print('Writing data from table ' + table)

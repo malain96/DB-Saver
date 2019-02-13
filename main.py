@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import db_saver.db_saver as db_saver
 

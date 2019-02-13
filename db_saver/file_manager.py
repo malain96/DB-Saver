@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 from db_saver.cipher import Cipher
