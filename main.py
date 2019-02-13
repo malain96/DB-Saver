@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import logging
+import os
 
 import db_saver.db_saver as db_saver
 from db_saver.db_saver_log import DbSaverLog
@@ -17,7 +18,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Logging config
-    logging.basicConfig(filename='./storage/logs.txt',
+    file_dir = os.path.dirname(os.path.abspath(__file__))
+    logging.basicConfig(filename=os.path.join(file_dir, './storage/logs.txt'),
                         filemode='a',
                         format='%(asctime)s %(name)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S',
