@@ -2,6 +2,7 @@
 import getpass
 import os
 from db_saver.file_manager import FileManager
+from db_saver.email import Email
 
 
 # Check which os is used and clear the terminal
@@ -101,3 +102,21 @@ def dialog():
             exit_dialog = True
         else:
             print("Please enter a valid number")
+
+
+# Function used to start a backup with a command line
+def auto_backup(file_to_open, password, email):
+    try:
+        # Retrieve the database
+        file = FileManager(file_to_open, password)
+        # Start the backup
+        file.backup_databases()
+        # If an email is set, send a confirmation email
+        if email:
+            message = Email.success_message(email)
+            Email.send(email, message)
+    except Exception as error:
+        # If an email is set, send an error email
+        if email:
+            message = Email.error_message(email, str(error))
+            Email.send(email, message)
