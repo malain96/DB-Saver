@@ -26,7 +26,7 @@ You are more than welcome to copy and modify it as you please.
 
 * Running the prompt :
     * In a terminal, go to the project's root. 
-    * Run `py main.py`.
+    * Run `py main.py` or `python3 main.py`.
     * Enter the name of the file containing the databases.
     * Enter the password used to protect this folder. If it's the first time you are running the script, just type the password you want to use.
     
@@ -34,7 +34,7 @@ You are more than welcome to copy and modify it as you please.
     
 * Running as a command line : 
     * In a terminal, go to the project's root.
-    * Run `py main.py -f your_database_path -p your_database_password [-e your_email]`.
+    * Run `python3 main.py -f your_database_path -p your_database_password [-e your_email]`.
     * The file and password are required but not the email. You can specify one if you wish to receive an email once your backup is done.
 
 Notes : 
