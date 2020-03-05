@@ -5,3 +5,4 @@ class Config:
     SMTP_SERVER = 'smtp.gmail.com'
     EMAIL = 'mymail@mail.com'
     PASSWORD = 'mypassword'
+    LOG_OUTPUT_FILE = './storage/logs.log'

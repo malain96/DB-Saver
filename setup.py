@@ -14,7 +14,7 @@ setup(
     description='DB Saver is a small Python script that I developed to save easily and simply my databases.',
     long_description=readme,
     author='Mathieu Alain',
-    author_email='alain.mathieu1996àgmail.com',
+    author_email='alain.mathieu1996^@gmail.com',
     url='https://github.com/malain96/DB-Saver',
     license=license,
     packages=find_packages(exclude='docs')

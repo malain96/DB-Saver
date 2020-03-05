@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import logging
 
-
 class DbSaverLog:
 
     # Function used to log and print infos

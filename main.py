@@ -2,6 +2,7 @@
 import argparse
 import logging
 import os
+from config import Config
 
 import db_saver.db_saver as db_saver
 from db_saver.db_saver_log import DbSaverLog
@@ -19,10 +20,10 @@ if __name__ == '__main__':
 
     # Logging config
     file_dir = os.path.dirname(os.path.abspath(__file__))
-    logging.basicConfig(filename=os.path.join(file_dir, './storage/logs.txt'),
+    logging.basicConfig(filename=os.path.join(file_dir, Config.LOG_OUTPUT_FILE),
                         filemode='a',
-                        format='%(asctime)s %(name)s %(levelname)s %(message)s',
-                        datefmt='%H:%M:%S',
+                        format='%(asctime)s %(levelname)s %(name)s %(pathname)s %(lineno)d %(message)s',
+                        datefmt='%Y-%m-%dT%H:%M:%S%z',
                         level=logging.DEBUG)
 
     # Check if both a file and password are given
